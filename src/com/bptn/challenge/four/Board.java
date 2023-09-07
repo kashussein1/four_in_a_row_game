@@ -7,12 +7,20 @@ import com.bptn.challenge.four.exceptions.ColumnFullException;
 import com.bptn.challenge.four.exceptions.InvalidMoveException;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Board {
     // add instance variables
     private String[][] board;
     private static Scanner scanner = new Scanner(System.in);
+
+    private boolean isFiveInRow = false;
+    private boolean isSixInRow = false;
+
+    private int length;
+
+
 
     public void boardSetUp() {
         int rows = 0;
@@ -27,28 +35,57 @@ public class Board {
 
             while (!validRow) {
                 System.out.println("Number of rows: ");
-                rows = scanner.nextInt();
+
                 try {
+                    rows = scanner.nextInt();
                     validRow = validBoard(rows);
 
                 } catch (BoardSetUpException e) {
                     System.out.println(e);
                     System.out.println("Please enter new number: ");
+                }catch (Exception e){
+                    System.out.println("wrong input");
+                    System.out.println("Please enter new number: ");
+                    scanner.nextLine();
                 }
             }
 
             while (!validColumn) {
                 System.out.println("Number of cols: ");
-                columns = scanner.nextInt();
                 try {
+                    columns = scanner.nextInt();
                     validColumn = validBoard(columns);
 
                 } catch (BoardSetUpException e) {
                     System.out.println(e);
                     System.out.println("Please enter new number: ");
+                }catch (Exception e){
+                    System.out.println("wrong input");
+                    System.out.println("Please enter new number: ");
+                    scanner.nextLine();
                 }
             }
 
+            boolean endLoop = false;
+            if(rows > 4 && columns > 4) {
+                while (!endLoop) {
+                    System.out.println("Please select a game mode: \n 1. Four in a Row\n2. Five in a row\n3. Six in a Row");
+                    int input = scanner.nextInt();
+                    switch (input){
+                        case 1:
+                            endLoop = true;
+                            break;
+                        case 2:
+                            this.isFiveInRow =true;
+                            endLoop =true;
+                            break;
+                        case 3:
+                            this.isSixInRow =true;
+                            endLoop =true;
+                            break;
+                    }
+                }
+            }
 
         }
 
@@ -62,11 +99,12 @@ public class Board {
             }
         }
 
-
+       length = board.length;
     }
 
-
-
+    public int getLength() {
+        return length;
+    }
 
     public static boolean validBoard(int input) throws BoardSetUpException {
         if (input < 4) {
@@ -146,68 +184,189 @@ public class Board {
     }
 
     public boolean checkVertical(String playerNumber) {
-        for (int col = 0; col < board[0].length; col++) {
-            // length - 3 here because we are comparing 4 in a row items
-            for (int row = 0; row < board.length - 3; row++) {
-                if (board[row][col].equals(playerNumber)) {
-                    if (board[row][col].equals(board[row + 1][col])
-                            && board[row][col].equals(board[row + 2][col])
-                            && board[row][col].equals(board[row + 3][col])) {
-                        return true;
-                    }
-                }
-            }
-        }
+       if(this.isFiveInRow){
+           for (int col = 0; col < board[0].length; col++) {
+               // length - 3 here because we are comparing 4 in a row items
+               for (int row = 0; row < board.length - 4; row++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col])
+                               && board[row][col].equals(board[row + 2][col])
+                               && board[row][col].equals(board[row + 3][col]) && board[row][col].equals(board[row + 4][col])   ) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       } else if (this.isSixInRow) {
+           for (int col = 0; col < board[0].length; col++) {
+               // length - 3 here because we are comparing 4 in a row items
+               for (int row = 0; row < board.length - 5; row++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col])
+                               && board[row][col].equals(board[row + 2][col])
+                               && board[row][col].equals(board[row + 3][col]) && board[row][col].equals(board[row + 5][col])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }else{
+           for (int col = 0; col < board[0].length; col++) {
+               // length - 3 here because we are comparing 4 in a row items
+               for (int row = 0; row < board.length - 3; row++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col])
+                               && board[row][col].equals(board[row + 2][col])
+                               && board[row][col].equals(board[row + 3][col])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }
+
+
 
         return false;
 
     }
 
     public boolean checkHorizontal(String playerNumber) {
-        for (int row = 0; row < board.length; row++) {
-            // try implementing this by being inspired by the checkVertical logic. Note avoid off by 1 errors. Also remember that you are now checking across columns within each row this time.
-            for (int col = 0; col < board[0].length - 3; col++) {
-                if (board[row][col].equals(playerNumber)) {
-                    if (board[row][col].equals(board[row][col + 1])
-                            && board[row][col].equals(board[row][col + 2])
-                            && board[row][col].equals(board[row][col + 3])) {
-                        return true;
+
+        if (this.isFiveInRow){
+            for (int row = 0; row < board.length; row++) {
+                // try implementing this by being inspired by the checkVertical logic. Note avoid off by 1 errors. Also remember that you are now checking across columns within each row this time.
+                for (int col = 0; col < board[0].length - 4; col++) {
+                    if (board[row][col].equals(playerNumber)) {
+                        if (board[row][col].equals(board[row][col + 1])
+                                && board[row][col].equals(board[row][col + 2])
+                                && board[row][col].equals(board[row][col + 3]) && board[row][col].equals(board[row + 4][col])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } else if (this.isSixInRow) {
+            for (int row = 0; row < board.length; row++) {
+                // try implementing this by being inspired by the checkVertical logic. Note avoid off by 1 errors. Also remember that you are now checking across columns within each row this time.
+                for (int col = 0; col < board[0].length - 5; col++) {
+                    if (board[row][col].equals(playerNumber)) {
+                        if (board[row][col].equals(board[row][col + 1])
+                                && board[row][col].equals(board[row][col + 2])
+                                && board[row][col].equals(board[row][col + 3]) && board[row][col].equals(board[row + 5][col]) ) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        }else{
+            for (int row = 0; row < board.length; row++) {
+                // try implementing this by being inspired by the checkVertical logic. Note avoid off by 1 errors. Also remember that you are now checking across columns within each row this time.
+                for (int col = 0; col < board[0].length - 3; col++) {
+                    if (board[row][col].equals(playerNumber)) {
+                        if (board[row][col].equals(board[row][col + 1])
+                                && board[row][col].equals(board[row][col + 2])
+                                && board[row][col].equals(board[row][col + 3])) {
+                            return true;
+                        }
                     }
                 }
             }
         }
+
+
+
         return false;
     }
 
     public boolean checkLeftDiagonal(String playerNumber) {
-        for (int row = 0; row < board.length - 3; row++) {
-            for (int col = 0; col < board[0].length - 3; col++) {
-                if (board[row][col].equals(playerNumber)) {
-                    if (board[row][col].equals(board[row + 1][col + 1])
-                            && board[row][col].equals(board[row + 2][col + 2])
-                            && board[row][col].equals(board[row + 3][col + 3])) {
-                        return true;
-                    }
-                }
-            }
-        }
+       if(this.isFiveInRow){
+           for (int row = 0; row < board.length - 4; row++) {
+               for (int col = 0; col < board[0].length - 4; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col + 1])
+                               && board[row][col].equals(board[row + 2][col + 2])
+                               && board[row][col].equals(board[row + 3][col + 3]) && board[row][col].equals(board[row + 4][col + 4])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       } else if (this.isSixInRow) {
+           for (int row = 0; row < board.length - 5; row++) {
+               for (int col = 0; col < board[0].length - 5; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col + 1])
+                               && board[row][col].equals(board[row + 2][col + 2])
+                               && board[row][col].equals(board[row + 3][col + 3]) && board[row][col].equals(board[row + 4][col + 4]) && board[row][col].equals(board[row + 5][col + 5])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+
+       }else {
+           for (int row = 0; row < board.length - 3; row++) {
+               for (int col = 0; col < board[0].length - 3; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col + 1])
+                               && board[row][col].equals(board[row + 2][col + 2])
+                               && board[row][col].equals(board[row + 3][col + 3])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }
+
+
+
         return false;
     }
 
     public boolean checkRightDiagonal(String playerNumber) {
         // implment method and return an appropriate return type.
-        System.out.println(board[0].length - 1);
-        for (int row = 0; row < board.length - 3; row++) {
-            for (int col = board[0].length - 1; col < board[0].length; col++) {
-                if (board[row][col].equals(playerNumber)) {
-                    if (board[row][col].equals(board[row + 1][col - 1])
-                            && board[row][col].equals(board[row + 2][col - 2])
-                            && board[row][col].equals(board[row + 3][col - 3])) {
-                        return true;
-                    }
-                }
-            }
-        }
+       if(this.isFiveInRow){
+           for (int row = 0; row < board.length - 4; row++) {
+               for (int col = board[0].length - 1; col < board[0].length; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col - 1])
+                               && board[row][col].equals(board[row + 2][col - 2])
+                               && board[row][col].equals(board[row + 3][col - 3]) && board[row][col].equals(board[row + 4][col - 4])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }else if (this.isSixInRow){
+           for (int row = 0; row < board.length - 5; row++) {
+               for (int col = board[0].length - 1; col < board[0].length; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col - 1])
+                               && board[row][col].equals(board[row + 2][col - 2])
+                               && board[row][col].equals(board[row + 3][col - 3]) && board[row][col].equals(board[row + 4][col - 4]) && board[row][col].equals(board[row + 5][col - 5])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }else{
+           for (int row = 0; row < board.length - 3; row++) {
+               for (int col = board[0].length - 1; col < board[0].length; col++) {
+                   if (board[row][col].equals(playerNumber)) {
+                       if (board[row][col].equals(board[row + 1][col - 1])
+                               && board[row][col].equals(board[row + 2][col - 2])
+                               && board[row][col].equals(board[row + 3][col - 3])) {
+                           return true;
+                       }
+                   }
+               }
+           }
+       }
+
+
+
         return false;
     }
 

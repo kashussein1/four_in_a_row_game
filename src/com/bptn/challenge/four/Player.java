@@ -12,13 +12,20 @@ public class Player {
     // Add other instance variable(s)
     private String playerNumber;
 
+    private String tokenColour;
+
     // Question: should scanner be static or not if i have other classes that would get user input
     private static Scanner scanner = new Scanner(System.in); // complete line
 
-    public Player(String name, String playerNumber) {
+
+
+    public Player(String name, String playerNumber, String tokenColour) {
         // complete constructor
         this.name = name;
         this.playerNumber = playerNumber;
+        this.tokenColour = tokenColour;
+
+
     }
 
     // create getter methods
@@ -29,6 +36,10 @@ public class Player {
     public String getPlayerNumber() {
         return playerNumber;
     }
+
+    public String getTokenColour() {return tokenColour;}
+
+
 
     public int makeMove() throws InputMismatchException {
 
@@ -50,6 +61,6 @@ return column;
     }
 
     public String toString() {
-        return ("Player " + playerNumber + " is " + name);
+        return ("Player " + playerNumber + " is " + name + " and their Token colour is " + tokenColour);
     }
 }
