@@ -15,7 +15,7 @@ public class Game {
     private HashSet<String> tokenSet;
     private Board board;
     private  Scanner scanner = new Scanner(System.in);
-    private ArrayList<Integer> moves;
+
 
 private Timer timer = new Timer();
 private int seconds = 120;
