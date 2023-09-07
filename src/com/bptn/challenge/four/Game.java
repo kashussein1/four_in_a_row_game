@@ -131,7 +131,7 @@ private int seconds = 120;
                 playerTurn(currentPlayer);
             }
 
-            moves.add(col);
+
 
 
 
